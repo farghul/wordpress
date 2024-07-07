@@ -25,7 +25,7 @@ spec:
             claimName: wp-data-claim
       containers:
         - name: nginx
-          image: ghcr.io/farghul/nginx:1.27.0-wp
+          image: ghcr.io/farghul/nginx:1.27.0-k8s
           ports:
           - containerPort: 8080
           resources:
