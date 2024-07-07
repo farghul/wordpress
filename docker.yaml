@@ -1,0 +1,40 @@
+---
+- name: Build Docker images
+  hosts: darwin
+  connection: local
+  vars_files: defaults/main.yaml
+  gather_facts: false
+  tasks:
+    - name: Run the MariaDB Dockerfile
+      ansible.builtin.command:
+        chdir: "{{ HOME }}/docker/mariadb"
+        cmd: docker build -t mariadb .
+
+    - name: Tag the MariaDB build
+      ansible.builtin.command: docker image tag mariadb:latest {{ MARIADB }}
+
+    - name: Push the MariaDB build to DockerHub
+      ansible.builtin.command: docker push {{ MARIADB }}
+
+    - name: Run the PHP Dockerfile
+      ansible.builtin.command:
+        chdir: "{{ HOME }}/docker/php"
+        cmd: docker build -t php .
+
+    - name: Tag the PHP build
+      ansible.builtin.command: docker image tag php:latest {{ PHP }}
+
+    - name: Push the PHP build to DockerHub
+      ansible.builtin.command: docker push {{ PHP }}
+
+    - name: Run the NGiNX Dockerfile
+      ansible.builtin.command:
+        chdir: "{{ HOME }}/docker/nginx"
+        cmd: docker build -t nginx .
+
+    - name: Tag the NGiNX build
+      ansible.builtin.command: docker image tag nginx:latest {{ NGiNX }}
+      
+    - name: Push the NGiNX build to DockerHub
+      ansible.builtin.command: docker push {{ NGiNX }}
+...

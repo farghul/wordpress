@@ -1,0 +1,18 @@
+# Logs
+*.log
+
+# Dotenv
+.env
+.env.*
+!.env.example
+
+# Folders and files
+/defaults
+/development
+
+# Client workstations
+.DS_Store
+._.DS_Store
+Thumbs.db
+.idea
+.vscode
