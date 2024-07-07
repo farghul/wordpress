@@ -8,23 +8,23 @@ Create a Kubernetes driven WordPress Stack with NGiNX, MariaDB, and WordPress ( 
 
 1. Applications:
 
-    - `Docker Hub` or `Podman Desktop`.
-    - Docker CLI ( or Podman CLI ).
-    - `Visual Studio Code`or equivilent code editor.
-    - Access to `docker.io`, `ghcr.io`, or `quay.io` ( RedHat ) to store images.
-    - `Minikube` and kubernetes-cli.
+  - `Docker Hub` or `Podman Desktop`.
+  - Docker CLI ( or Podman CLI ).
+  - `Visual Studio Code`or equivilent code editor.
+  - Access to `docker.io`, `ghcr.io`, or `quay.io` ( RedHat ) to store images.
+  - `Minikube` and kubernetes-cli.
 
 2. Variables (defaults/main.yaml):
 
-    - HOME: Root project folder.
-    - CONFIGS: Folder location of the yaml config files.
-    - MARIADB:  `[repo]/[name]:[version]` of the MariaDB image.
-    - WORDPRESS:  `[repo]/[name]:[version]` of the PHP image.
-    - NGiNX:  `[repo]/[name]:[version]` of the NGiNX image.
-    - DB_ROOT_PASSWORD: Mariadb Root password.
-    - DB_PASSWORD: Mariadb Admin password.
-    - DB_NAME: Database name.
-    - DB_USER: Default database user.
+  - HOME: Root project folder.
+  - CONFIGS: Folder location of the yaml config files.
+  - MARIADB: `[repo]/[name]:[version]` of the MariaDB image.
+  - WORDPRESS: `[repo]/[name]:[version]` of the PHP image.
+  - NGiNX: `[repo]/[name]:[version]` of the NGiNX image.
+  - DB_ROOT_PASSWORD: Mariadb Root password.
+  - DB_PASSWORD: Mariadb Admin password.
+  - DB_NAME: Database name.
+  - DB_USER: Default database user.
 
 
 3. An `.env` file with the following values:
@@ -67,7 +67,9 @@ Individually, the images can be built, tagged, and pushed to a repo for easy acc
 
 ```bash
 docker build -f Dockerfile -t [name] .
+
 docker image tag [name]:latest [repo]/[name]:[version]
+
 docker push [repo]/[name]:[version]
 ```
 
@@ -79,25 +81,46 @@ ansible-playbook docker.yaml -i ~/inventory.yaml
 
 ## Run
 
-Create the deployments:
+1. Start the Minikube environment:
+
+```bash
+> minikube start                                                                                 
+😄  minikube v1.33.1 on Darwin 14.5
+    ▪ MINIKUBE_IN_STYLE=1
+    ▪ MINIKUBE_ROOTLESS=true
+✨  Using the hyperkit driver based on user configuration
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🔥  Creating hyperkit VM (CPUs=2, Memory=4000MB, Disk=20000MB) ...
+🐳  Preparing Kubernetes v1.30.0 on Docker 26.0.2 ...
+    ▪ Generating certificates and keys ...
+    ▪ Booting up control plane ...
+    ▪ Configuring RBAC rules ...
+🔗  Configuring bridge CNI (Container Networking Interface) ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🌟  Enabled addons: storage-provisioner, default-storageclass
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+```
+
+2. Create the Kubernetes deployments:
 
 ```bash
 ansible-playbook playbook.yaml -i ~/inventory.yaml
 ```
 
-Check that the deployments are running:
+3. Monitor the deployments using the Minikube Dashboard:
 
 ```bash
 minikube dashboard
 ```
 
-Create the Roots/Bedrock project:
+4. Create the Roots/Bedrock project:
 
 ```bash
 ansible-playbook bedrock.yaml -i ~/inventory.yaml
 ```
 
-Navigate to the site:
+5. Navigate to the locally hosted site:
 
 ```bash
 minikube service nginx
