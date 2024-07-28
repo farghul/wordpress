@@ -1,5 +1,5 @@
 ---
-- name: Setup local WordPress Bedrock instance
+- name: Install a Bedrock version of WordPress 
   hosts: darwin
   connection: local
   vars_files: defaults/main.yaml
@@ -17,9 +17,9 @@
     - name: Create a new Bedrock project
       ansible.builtin.command: kubectl exec {{ podname }} -- composer create-project roots/bedrock
 
-    - name: Sleep for 3 seconds and continue with play
+    - name: Sleep for 5 seconds and continue with play
       ansible.builtin.wait_for:
-        timeout: 3
+        timeout: 5
       delegate_to: localhost
 
     - name: Capture the value of the Node port

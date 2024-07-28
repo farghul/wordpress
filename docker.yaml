@@ -1,5 +1,5 @@
 ---
-- name: Build Docker images
+- name: Build, tag, and push Docker images
   hosts: darwin
   connection: local
   vars_files: defaults/main.yaml

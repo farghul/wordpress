@@ -49,9 +49,9 @@
     - name: Create NGiNX Service
       ansible.builtin.command: kubectl apply -f {{ HOME }}/manifests/service-nginx.yaml
 
-    - name: Sleep for 3 seconds before enabling Minikube Dashboard features
+    - name: Sleep for 5 seconds before enabling Minikube Dashboard features
       ansible.builtin.wait_for:
-        timeout: 3
+        timeout: 5
       delegate_to: localhost
 
     - name: Enable all Minikube Dashboard features
