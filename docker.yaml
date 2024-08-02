@@ -5,36 +5,45 @@
   vars_files: defaults/main.yaml
   gather_facts: false
   tasks:
-    - name: Run the MariaDB Dockerfile
-      ansible.builtin.command:
-        chdir: "{{ HOME }}/docker/mariadb"
-        cmd: docker build -t mariadb .
+    - name: Build the MariaDB image
+      tags: mdb
+      block:
+        - name: Run the MariaDB Dockerfile
+          ansible.builtin.command:
+            chdir: "{{ HOME }}/docker/mariadb"
+            cmd: docker build -t mariadb . --no-cache
 
-    - name: Tag the MariaDB build
-      ansible.builtin.command: docker image tag mariadb:latest {{ MARIADB }}
+        - name: Tag the MariaDB build
+          ansible.builtin.command: docker image tag mariadb:latest {{ MARIADB }}
 
-    - name: Push the MariaDB build to DockerHub
-      ansible.builtin.command: docker push {{ MARIADB }}
+        - name: Push the MariaDB build to DockerHub
+          ansible.builtin.command: docker push {{ MARIADB }}
 
-    - name: Run the PHP Dockerfile
-      ansible.builtin.command:
-        chdir: "{{ HOME }}/docker/php"
-        cmd: docker build -t php .
+    - name: Build the PHP image
+      tags: php
+      block:
+        - name: Run the PHP Dockerfile
+          ansible.builtin.command:
+            chdir: "{{ HOME }}/docker/php"
+            cmd: docker build -t php . --no-cache
 
-    - name: Tag the PHP build
-      ansible.builtin.command: docker image tag php:latest {{ PHP }}
+        - name: Tag the PHP build
+          ansible.builtin.command: docker image tag php:latest {{ PHP }}
 
-    - name: Push the PHP build to DockerHub
-      ansible.builtin.command: docker push {{ PHP }}
+        - name: Push the PHP build to DockerHub
+          ansible.builtin.command: docker push {{ PHP }}
 
-    - name: Run the NGiNX Dockerfile
-      ansible.builtin.command:
-        chdir: "{{ HOME }}/docker/nginx"
-        cmd: docker build -t nginx .
+    - name: Build the NGiNX image
+      tags: nginx
+      block:
+        - name: Run the NGiNX Dockerfile
+          ansible.builtin.command:
+            chdir: "{{ HOME }}/docker/nginx"
+            cmd: docker build -t nginx . --no-cache
 
-    - name: Tag the NGiNX build
-      ansible.builtin.command: docker image tag nginx:latest {{ NGiNX }}
-      
-    - name: Push the NGiNX build to DockerHub
-      ansible.builtin.command: docker push {{ NGiNX }}
+        - name: Tag the NGiNX build
+          ansible.builtin.command: docker image tag nginx:latest {{ NGiNX }}
+          
+        - name: Push the NGiNX build to DockerHub
+          ansible.builtin.command: docker push {{ NGiNX }}
 ...
