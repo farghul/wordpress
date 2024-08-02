@@ -130,6 +130,14 @@ You should be greeted by the WordPress install screen:
 
 ![Install](images/install.webp)
 
+## Delete
+
+To remove all deployments:
+
+```bash
+ansible-playbook delete.yaml -i ~/inventory.yaml
+```
+
 ## License
 
 Code is distributed under [The Unlicense](https://github.com/farghul/kuberpress/blob/main/LICENSE.md) and is part of the Public Domain.
