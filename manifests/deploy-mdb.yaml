@@ -1,6 +1,6 @@
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mariadb
   namespace: default
@@ -10,6 +10,7 @@ metadata:
     app.kubernetes.io/version: "11.5"
     app.kubernetes.io/component: database
 spec:
+  serviceName: mariadb
   replicas: 1
   selector:
     matchLabels:
@@ -67,8 +68,7 @@ spec:
       dnsPolicy: ClusterFirst
       securityContext: {}
       schedulerName: default-scheduler
-  strategy:
-    type: Recreate
+  updateStrategy:
+    type: RollingUpdate
   revisionHistoryLimit: 10
-  progressDeadlineSeconds: 600
 ...
