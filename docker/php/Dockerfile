@@ -1,4 +1,4 @@
-FROM php:8.3-fpm
+FROM php:8.2-fpm
 
 # Declare the base Composer version
 ENV COMPOSER_ROOT_VERSION='2.8.1'
@@ -7,7 +7,7 @@ ENV COMPOSER_ROOT_VERSION='2.8.1'
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 
 # PHP Core and WordPress extensions
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -yq --no-install-recommends \
 		libexif-doc \
 		libfreetype-dev \
 		libjpeg62-turbo-dev \

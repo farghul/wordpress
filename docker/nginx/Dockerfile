@@ -1,4 +1,4 @@
-FROM nginx:1.27.2
+FROM nginx:latest
 
 # Install the GNU Compiler Collection
 RUN apt-get update && apt-get install -y \
