@@ -17,27 +17,30 @@ Create a Kubernetes driven WordPress Stack with NGiNX, MariaDB, and WordPress ( 
 2. Variables (defaults/main.yaml):
 
   - HOME: Root project folder.
-  - CONFIGS: Folder location of the yaml config files.
+  - DOCKER: Folder location of the Docker image files.
+  - MANIFESTS: Folder location of the YAML config files.
   - MARIADB: `[repo]/[name]:[version]` of the MariaDB image.
-  - WORDPRESS: `[repo]/[name]:[version]` of the PHP image.
   - NGiNX: `[repo]/[name]:[version]` of the NGiNX image.
+  - PHP: `[repo]/[name]:[version]` of the PHP image.
   - DB_ROOT_PASSWORD: Mariadb Root password.
   - DB_PASSWORD: Mariadb Admin password.
   - DB_NAME: Database name.
   - DB_USER: Default database user.
-
+  - EMAIL: WordPress Admin email.
+  - TITLE: WordPress site title.
+  - WP_USER: WordPress Admin user.
 
 3. An `.env` file with the following values:
 
-```bash
+``` Dotenv
 DB_NAME=''
 DB_USER=''
 DB_PASSWORD=''
 DB_ROOT_PASSWORD=''
 DB_HOST=''
 WP_ENV=''
-WP_HOME='http://'
-WP_SITEURL='http://wp'
+WP_HOME='http://<site_url>'
+WP_SITEURL='http://<site_url>/wp'
 
 # Generate your keys here: https://roots.io/salts.html
 AUTH_KEY=''
@@ -52,7 +55,7 @@ NONCE_SALT=''
 
 4. An `inventory.yaml` file for Ansible to reference the hosts value.
 
-```ansible
+``` yaml
 ---
 apple:
   hosts:
@@ -65,7 +68,7 @@ apple:
 
 Individually, the images can be built, tagged, and pushed to a repo for easy access.
 
-```bash
+``` zsh
 docker build -f Dockerfile -t [name] .
 
 docker image tag [name]:latest [repo]/[name]:[version]
@@ -75,7 +78,7 @@ docker push [repo]/[name]:[version]
 
 Or, using Ansible to automate the process:
 
-```bash
+``` zsh
 ansible-playbook docker.yaml -i ~/inventory.yaml
 ```
 
@@ -83,7 +86,7 @@ ansible-playbook docker.yaml -i ~/inventory.yaml
 
 1. Start the Minikube environment:
 
-```bash
+``` zsh
 > minikube start                                                                                 
 😄  minikube v1.33.1 on Darwin 14.5
     ▪ MINIKUBE_IN_STYLE=1
@@ -104,25 +107,25 @@ ansible-playbook docker.yaml -i ~/inventory.yaml
 
 2. Create the Kubernetes deployments:
 
-```bash
+``` zsh
 ansible-playbook playbook.yaml -i ~/inventory.yaml
 ```
 
 3. Monitor the deployments using the Minikube Dashboard:
 
-```bash
+``` zsh
 minikube dashboard
 ```
 
 4. Create the Roots/Bedrock project:
 
-```bash
+``` zsh
 ansible-playbook bedrock.yaml -i ~/inventory.yaml
 ```
 
 5. Navigate to the locally hosted site:
 
-```bash
+``` zsh
 minikube service nginx
 ```
 
@@ -134,7 +137,7 @@ You should be greeted by the WordPress install screen:
 
 To remove all deployments:
 
-```bash
+``` zsh
 ansible-playbook delete.yaml -i ~/inventory.yaml
 ```
 
