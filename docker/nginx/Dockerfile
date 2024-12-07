@@ -22,4 +22,5 @@ COPY nginx.conf /etc/nginx
 # Create the symbolic link
 RUN ln -s /etc/nginx/sites-available/blog.conf /etc/nginx/sites-enabled/blog.conf \
     # Claim ownership for the nginx user
-    && chown -R nginx:nginx /usr/share/nginx /var/log/nginx /etc/nginx
+    && chown -R nginx:nginx /usr/share/nginx /var/log/nginx /var/cache/nginx /etc/nginx \
+    && chmod 777 /var/log/nginx/nginx.pid
