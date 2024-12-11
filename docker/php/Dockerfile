@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.4-fpm
 
 # Declare the base Composer version
 ENV COMPOSER_ROOT_VERSION='2.8.3'
@@ -6,23 +6,24 @@ ENV COMPOSER_ROOT_VERSION='2.8.3'
 # Install Composer
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 
-# PHP Core and WordPress extensions
-RUN apt-get update && apt-get install -yq --no-install-recommends \
-		libexif-doc \
-		libfreetype-dev \
-		libjpeg62-turbo-dev \
-		libpng-dev \
-		libicu-dev \
-		libmagickwand-dev \
-		zip libzip-dev \
+# PHP Core extensions
+RUN apt-get update && apt-get install -y \
+        libpq-dev libzip-dev \
+        zlib1g-dev libonig-dev \
+		libicu-dev libexif-doc \
 		default-libmysqlclient-dev \
 		default-mysql-client \
-	&& docker-php-ext-configure gd --with-freetype --with-jpeg \
-	&& docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql zip \
+        libldap2-dev \
+        libmemcached-dev \
+        libfreetype6-dev \
+        memcached libmemcached-tools \
+    && docker-php-ext-install -j$(nproc) gd intl mysqli pdo pdo_mysql zip \
+    && docker-php-ext-configure gd --with-freetype \
 	&& docker-php-ext-install exif \
-	&& docker-php-ext-install intl \
-	&& pecl install imagick \
-	&& docker-php-ext-enable imagick \
+	# && pecl install imagick \
+    && pecl install memcached-3.3.0 \
+	# && docker-php-ext-enable imagick \
+    && docker-php-ext-enable memcached \
 	&& mkdir -p /.config/composer \
 		/.composer \
 		/.cache \
