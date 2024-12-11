@@ -6,31 +6,39 @@ Create a Kubernetes driven WordPress Stack with NGiNX, MariaDB, and WordPress ( 
  
 ## Prerequisites
 
-1. Applications:
+The following items are necessary for a successful deployment.
 
-  - `Docker Hub` or `Podman Desktop`.
-  - Docker CLI ( or Podman CLI ).
-  - `Visual Studio Code`or equivilent code editor.
-  - Access to `docker.io`, `ghcr.io`, or `quay.io` ( RedHat ) to store images.
-  - `Minikube` and kubernetes-cli.
+### Applications
 
-2. Variables (defaults/main.yaml):
+- `Docker Hub` or `Podman Desktop`.
+- Docker CLI ( or Podman CLI ).
+- `Visual Studio Code`or equivilent code editor.
+- Access to `docker.io`, `ghcr.io`, or `quay.io` ( RedHat ) to store images.
+- `Minikube` and kubernetes-cli.
 
-  - HOME: Root project folder.
-  - DOCKER: Folder location of the Docker image files.
-  - MANIFESTS: Folder location of the YAML config files.
-  - MARIADB: `[repo]/[name]:[version]` of the MariaDB image.
-  - NGiNX: `[repo]/[name]:[version]` of the NGiNX image.
-  - PHP: `[repo]/[name]:[version]` of the PHP image.
-  - DB_ROOT_PASSWORD: Mariadb Root password.
-  - DB_PASSWORD: Mariadb Admin password.
-  - DB_NAME: Database name.
-  - DB_USER: Default database user.
-  - EMAIL: WordPress Admin email.
-  - TITLE: WordPress site title.
-  - WP_USER: WordPress Admin user.
+### Variables
 
-3. An `.env` file with the following values:
+An Ansible `defaults/main.yaml` file:
+
+``` yaml
+---
+HOME: Root project folder.
+DOCKER: Folder location of the Docker image files.
+MANIFESTS: Folder location of the YAML config files.
+MARIADB: `[repo]/[name]:[version]` of the MariaDB image.
+NGiNX: `[repo]/[name]:[version]` of the NGiNX image.
+PHP: `[repo]/[name]:[version]` of the PHP image.
+DB_ROOT_PASSWORD: Mariadb Root password.
+DB_PASSWORD: Mariadb Admin password.
+DB_NAME: Database name.
+DB_USER: Default database user.
+EMAIL: WordPress Admin email.
+TITLE: WordPress site title.
+WP_USER: WordPress Admin user.
+...
+```
+
+A hidden `.env` file with the following values:
 
 ``` Dotenv
 DB_NAME=''
@@ -53,7 +61,9 @@ LOGGED_IN_SALT=''
 NONCE_SALT=''
 ```
 
-4. An `inventory.yaml` file for Ansible to reference the hosts value.
+### Ansible
+
+An `inventory.yaml` file for Ansible to reference the hosts value.
 
 ``` yaml
 ---
