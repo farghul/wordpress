@@ -1,0 +1,52 @@
+---
+- name: Install a Bedrock version of WordPress 
+  hosts: darwin
+  connection: local
+  vars_files: defaults/main.yaml
+  gather_facts: false
+  tasks:
+    - name: Query for the WordPress pod name
+      ansible.builtin.command: kubectl get pods -l app=wordpress --no-headers=true -o name
+      register: podname
+      changed_when: podname.rc != 0
+
+    - name: Trim the pod/ prefix from the variable value
+      ansible.builtin.set_fact:
+        podname: "{{ podname.stdout | regex_replace('pod/', '', count=1) }}"
+
+    - name: Create a new Bedrock project
+      ansible.builtin.command: kubectl exec {{ podname }} -- composer create-project roots/bedrock
+
+    - name: Sleep for 5 seconds and continue with play
+      ansible.builtin.wait_for:
+        timeout: 5
+      delegate_to: localhost
+
+    - name: Capture the value of the Node port
+      ansible.builtin.command: minikube service nginx --url
+      register: nodeport
+      changed_when: nodeport.rc != 0
+
+    - name: Replace the WP_HOME placeholder with the actual url
+      ansible.builtin.lineinfile:
+        path: '{{ SELF }}/.env'
+        search_string: "WP_HOME="
+        line: "WP_HOME='{{ nodeport.stdout }}'"
+        mode: '0644'
+
+    - name: Replace the WP_SITEURL placeholder with the actual url
+      ansible.builtin.lineinfile:
+        path: '{{ SELF }}/.env'
+        search_string: "WP_SITEURL="
+        line: "WP_SITEURL='{{ nodeport.stdout }}/wp'"
+        mode: '0644'
+
+    - name: Copy the modified .env file to the WordPress pod
+      ansible.builtin.command: kubectl cp {{ SELF }}/.env {{ podname }}:/var/www/html/bedrock/
+
+    - name: Copy the favicon.ico file to the WordPress pod
+      ansible.builtin.command: kubectl cp {{ SELF }}/docker/php/favicon.ico {{ podname }}:/var/www/html/bedrock/web/
+
+    - name: Claim ownership of the bedrock folder for the www-data user
+      ansible.builtin.command: kubectl exec {{ podname }} -- chown -R www-data:www-data /var/www/html/
+...

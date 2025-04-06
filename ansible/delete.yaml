@@ -1,0 +1,51 @@
+---
+- name: Remove all elements of a WordPress Kubernetes deployment
+  hosts: darwin
+  connection: local
+  vars_files: defaults/main.yaml
+  gather_facts: false
+  ignore_errors: true
+  tasks:
+    - name: Delete NGiNX Service
+      ansible.builtin.command: kubectl delete -f {{ SELF }}/manifests/service-nginx.yaml
+
+    - name: Delete NGiNX Deployment
+      ansible.builtin.command: kubectl delete -f {{ SELF }}/manifests/deploy-nginx.yaml
+
+    - name: Delete MariaDB Service
+      ansible.builtin.command: kubectl delete -f {{ SELF }}/manifests/service-mdb.yaml
+
+    - name: Delete MariaDB Deployment
+      ansible.builtin.command: kubectl delete -f {{ SELF }}/manifests/deploy-mdb.yaml
+
+    - name: Delete WordPress Service
+      ansible.builtin.command: kubectl delete -f {{ SELF }}/manifests/service-wp.yaml
+
+    - name: Delete WordPress Deployment
+      ansible.builtin.command: kubectl delete -f {{ SELF }}/manifests/deploy-wp.yaml
+
+    - name: Delete MariaDB Secret
+      ansible.builtin.command: kubectl delete secret mariadb
+
+    - name: Sleep for 5 seconds to give the claims time to initialize
+      ansible.builtin.wait_for:
+        timeout: 3
+      delegate_to: localhost
+
+    - name: Delete MariaDB Volume Claim
+      ansible.builtin.command: kubectl delete -f {{ SELF }}/manifests/pvc-mdb.yaml
+
+    - name: Delete WordPress Volume Claim
+      ansible.builtin.command: kubectl delete -f {{ SELF }}/manifests/pvc-wp.yaml
+
+    - name: Sleep for 5 seconds to give the volumes time to initialize
+      ansible.builtin.wait_for:
+        timeout: 3
+      delegate_to: localhost
+
+    - name: Delete MariaDB Volume
+      ansible.builtin.command: kubectl delete -f {{ SELF }}/manifests/pv-mdb.yaml
+
+    - name: Delete WordPress Volume
+      ansible.builtin.command: kubectl delete -f {{ SELF }}/manifests/pv-wp.yaml
+...

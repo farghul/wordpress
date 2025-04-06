@@ -1,0 +1,59 @@
+---
+- name: Kubernetes WordPress Assembly
+  hosts: darwin
+  connection: local
+  vars_files: defaults/main.yaml
+  gather_facts: false
+  ignore_errors: true
+  tasks:
+    - name: Create WordPress Volume
+      ansible.builtin.command: kubectl apply -f {{ SELF }}/manifests/pv-wp.yaml
+
+    - name: Create MariaDB Volume
+      ansible.builtin.command: kubectl apply -f {{ SELF }}/manifests/pv-mdb.yaml
+
+    - name: Sleep for 5 seconds to give the volumes time to initialize
+      ansible.builtin.wait_for:
+        timeout: 5
+      delegate_to: localhost
+
+    - name: Create WordPress Volume Claim
+      ansible.builtin.command: kubectl apply -f {{ SELF }}/manifests/pvc-wp.yaml
+
+    - name: Create MariaDB Volume Claim
+      ansible.builtin.command: kubectl apply -f {{ SELF }}/manifests/pvc-mdb.yaml
+
+    - name: Sleep for 5 seconds to give the claims time to initialize
+      ansible.builtin.wait_for:
+        timeout: 5
+      delegate_to: localhost
+
+    - name: Create MariaDB Secret
+      ansible.builtin.command: kubectl create secret generic mariadb --from-literal=MARIADB_DATABASE={{ DB_NAME }} --from-literal=MARIADB_USER={{ DB_USER }} --from-literal=MARIADB_PASSWORD={{ DB_PASSWORD }} --from-literal=MARIADB_ROOT_PASSWORD={{ DB_ROOT_PASSWORD }}
+      
+    - name: Create WordPress Deployment
+      ansible.builtin.command: kubectl apply -f {{ SELF }}/manifests/deploy-wp.yaml
+
+    - name: Create WordPress Service
+      ansible.builtin.command: kubectl apply -f {{ SELF }}/manifests/service-wp.yaml
+
+    - name: Create MariaDB Deployment
+      ansible.builtin.command: kubectl apply -f {{ SELF }}/manifests/deploy-mdb.yaml
+
+    - name: Create MariaDB Service
+      ansible.builtin.command: kubectl apply -f {{ SELF }}/manifests/service-mdb.yaml
+
+    - name: Create NGiNX Deployment
+      ansible.builtin.command: kubectl apply -f {{ SELF }}/manifests/deploy-nginx.yaml
+
+    - name: Create NGiNX Service
+      ansible.builtin.command: kubectl apply -f {{ SELF }}/manifests/service-nginx.yaml
+
+    - name: Sleep for 5 seconds before enabling Minikube Dashboard features
+      ansible.builtin.wait_for:
+        timeout: 5
+      delegate_to: localhost
+
+    - name: Enable all Minikube Dashboard features
+      ansible.builtin.command: minikube addons enable metrics-server
+...

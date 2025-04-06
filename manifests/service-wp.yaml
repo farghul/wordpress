@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: wordpress
+  name: wordpress
+spec:
+  clusterIP: None
+  ports:
+  - port: 9000
+    name: 9000-tcp
+  selector:
+    app: wordpress
+...

@@ -1,0 +1,45 @@
+ARG PHP
+ARG COMPOSER
+
+FROM php:$PHP
+
+# Declare the base Composer version
+ENV COMPOSER_ROOT_VERSION=$COMPOSER
+
+LABEL org.opencontainers.image.description="PHP-FPM for WordPress in Kubernetes"
+
+# Install Composer
+COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
+
+# PHP Core extensions
+RUN apt-get update && apt-get install -y \
+        libpq-dev libzip-dev \
+        zlib1g-dev libonig-dev \
+		libicu-dev libexif-doc \
+		default-libmysqlclient-dev \
+		default-mysql-client \
+        libldap2-dev \
+        libmemcached-dev \
+        libfreetype6-dev \
+        memcached libmemcached-tools \
+    && docker-php-ext-install -j$(nproc) gd intl mysqli pdo pdo_mysql zip \
+    && docker-php-ext-configure gd --with-freetype \
+	&& docker-php-ext-install exif \
+	# && pecl install imagick \
+	&& pecl install memcached-3.3.0 \
+	# && docker-php-ext-enable imagick \
+    && docker-php-ext-enable memcached \
+	&& mkdir -p /.config/composer \
+		/.composer \
+		/.cache \
+	# Install WP-CLI
+	&& curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+	&& chmod +x wp-cli.phar \
+	&& mv wp-cli.phar /usr/local/bin/wp
+
+# Copy the Composer keys
+COPY keys.dev.pub /.config/composer
+COPY keys.tags.pub /.config/composer
+	
+# Claim ownership for the www-data user
+RUN chown -R www-data:www-data /.cache /.composer /.config
