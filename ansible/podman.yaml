@@ -16,8 +16,8 @@
         - name: Tag the MariaDB build
           ansible.builtin.command: podman image tag mariadb:latest {{ MARIADB }}
 
-        - name: Push the MariaDB build to a container registry
-          ansible.builtin.command: podman push {{ MARIADB }}
+        # - name: Push the MariaDB build to a container registry
+        #   ansible.builtin.command: podman push {{ MARIADB }}
       rescue:
         - name: Make sure all handlers run
           meta: flush_handlers
@@ -33,8 +33,8 @@
         - name: Tag the PHP build
           ansible.builtin.command: podman image tag php:latest {{ PHP }}
 
-        - name: Push the PHP build to a container registry
-          ansible.builtin.command: podman push {{ PHP }}
+        # - name: Push the PHP build to a container registry
+        #   ansible.builtin.command: podman push {{ PHP }}
       rescue:
         - name: Make sure all handlers run
           meta: flush_handlers
@@ -50,8 +50,8 @@
         - name: Tag the NGiNX build
           ansible.builtin.command: podman image tag nginx:latest {{ NGiNX }}
           
-        - name: Push the NGiNX build to a container registry
-          ansible.builtin.command: podman push {{ NGiNX }}
+        # - name: Push the NGiNX build to a container registry
+        #   ansible.builtin.command: podman push {{ NGiNX }}
       rescue:
         - name: Make sure all handlers run
           meta: flush_handlers

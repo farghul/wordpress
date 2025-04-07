@@ -1,6 +1,6 @@
 # Kubernetes WordPress Stack
 
-Create a Kubernetes driven WordPress Stack with NGiNX, MariaDB, and WordPress ( including Composer and WP-CLI ) using Ansible and Podman.
+Create a Kubernetes driven WordPress Stack with NGiNX, MariaDB, Composer, and WP-CLI using Ansible and Podman.
 
 ![Stack](images/stack.webp)
  
@@ -8,12 +8,12 @@ Create a Kubernetes driven WordPress Stack with NGiNX, MariaDB, and WordPress ( 
 
 The following items are necessary for a successful deployment.
 
-### Applications
+### Components
 
-- `Podman Desktop` and Podman CLI
+- `Podman Desktop` and `podman` CLI
 - `Visual Studio Code`or equivilent code editor
-- Access to `docker.io`, `ghcr.io`, or `quay.io` ( RedHat ) to store images
-- `Minikube` and kubernetes-cli
+- `docker.io`, `ghcr.io`, or `quay.io` ( RedHat ) to store images
+- `Minikube` and 'kubernetes-cli'
 
 ### Variables
 
@@ -53,17 +53,17 @@ apple:
 ...
 ```
 
-An `ansible/defaults/main.yaml` file:
+A `main.yaml` file in the `ansible/defaults` subdirectory:
 
 ``` yaml
 ---
-DB_ROOT_PASSWORD: Mariadb Root password
-DB_PASSWORD: Mariadb Admin password
+DB_ROOT_PASSWORD: Mariadb root password
+DB_PASSWORD: Mariadb admin password
 DB_NAME: Database name
 DB_USER: Default database user
-EMAIL: WordPress Admin email
+EMAIL: WordPress admin email
 TITLE: WordPress site title
-WP_USER: WordPress Admin user
+WP_USER: WordPress admin user
 ...
 ```
 
@@ -71,11 +71,11 @@ WP_USER: WordPress Admin user
 
 ``` yaml
 ---
-FPM: php-fpm version
-COMPOSER: Composer version
-MARIADB: `[repo]/[name]:[version]` of the MariaDB image
-NGiNX: `[repo]/[name]:[version]` of the NGiNX image
-PHP: `[repo]/[name]:[version]` of the PHP image
+FPM: PHP-FPM release version
+COMPOSER: Composer release version
+MARIADB: `[repo/username]/[imagename]:[version]` of the MariaDB image
+NGiNX: `[repo/username]/[imagename]:[version]` of the NGiNX image
+PHP: `[repo/username]/[imagename]:[version]` of the PHP image
 SELF: Path to the local clone of the wordpress repository
 ...
 ```
