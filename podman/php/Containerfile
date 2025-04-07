@@ -1,9 +1,7 @@
-ARG PHP
-ARG COMPOSER
-
-FROM php:$PHP
+FROM php:fpm
 
 # Declare the base Composer version
+ARG COMPOSER
 ENV COMPOSER_ROOT_VERSION=$COMPOSER
 
 LABEL org.opencontainers.image.description="PHP-FPM for WordPress in Kubernetes"
