@@ -71,8 +71,7 @@ WP_USER: WordPress admin user
 
 ``` yaml
 ---
-FPM: PHP-FPM release version
-COMPOSER: Composer release version
+COMPOSER: Composer release version (e.g. 2.8.7)
 MARIADB: `[repo/username]/[imagename]:[version]` of the MariaDB image
 NGiNX: `[repo/username]/[imagename]:[version]` of the NGiNX image
 PHP: `[repo/username]/[imagename]:[version]` of the PHP image
