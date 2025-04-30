@@ -2,7 +2,7 @@
 
 Create a Kubernetes driven WordPress Stack with NGiNX, MariaDB, Composer, and WP-CLI using Ansible and Podman.
 
-![Stack](images/stack.webp)
+![Stack](webp/stack.webp)
  
 ## Prerequisites
 
@@ -146,7 +146,7 @@ minikube service nginx
 
 You should be greeted by the WordPress install screen:
 
-![Install](images/install.webp)
+![Install](webp/install.webp)
 
 ## Delete
 
